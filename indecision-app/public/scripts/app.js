@@ -1,40 +1,24 @@
 'use strict';
 
-console.log('app.js is running!');
-
 var app = {
-	title: 'Indecision App',
-	subtitle: 'Put your life in the hands of a computer',
-	options: []
-};
-
-var onFormSubmit = function onFormSubmit(e) {
-	e.preventDefault();
-
-	var option = e.target.elements.option.value;
-
-	if (option) {
-		app.options.push(option);
-		e.target.elements.option.value = '';
-		render();
-	}
-};
-
-var onRemoveAll = function onRemoveAll(e) {
-	app.options = [];
-	render();
-};
-
-var onMakeDecision = function onMakeDecision(e) {
-	var randomNum = Math.floor(Math.random() * app.options.length);
-	var option = app.options[randomNum];
-	alert(option);
-	//render();
+	title: 'Visibility Toggle',
+	details: 'Hey. These are some details you can now see!',
+	buttonName: "Show details"
 };
 
 var appRoot = document.getElementById('app');
 
-var numbers = [55, 101, 1000];
+var buttonState = false;
+var onDetails = function onDetails(e) {
+	if (buttonState) {
+		app.buttonName = "Show Details";
+		buttonState = false;
+	} else {
+		app.buttonName = "Hide Details";
+		buttonState = true;
+	};
+	render();
+};
 
 var render = function render() {
 	var template = React.createElement(
@@ -45,46 +29,15 @@ var render = function render() {
 			null,
 			app.title
 		),
-		app.subtitle && React.createElement(
-			'p',
-			null,
-			app.subtitle
-		),
-		React.createElement(
-			'p',
-			null,
-			app.options.length ? 'Here are your options' : 'No options'
-		),
 		React.createElement(
 			'button',
-			{ disabled: app.options.length === 0, onClick: onMakeDecision },
-			'What should I do'
+			{ onClick: onDetails },
+			app.buttonName
 		),
-		React.createElement(
-			'button',
-			{ onClick: onRemoveAll },
-			'Remove All'
-		),
-		React.createElement(
-			'ol',
+		buttonState && React.createElement(
+			'p',
 			null,
-			app.options.map(function (option) {
-				return React.createElement(
-					'li',
-					{ key: option },
-					option
-				);
-			})
-		),
-		React.createElement(
-			'form',
-			{ onSubmit: onFormSubmit },
-			React.createElement('input', { type: 'text', name: 'option' }),
-			React.createElement(
-				'button',
-				null,
-				'Add Option'
-			)
+			app.details
 		)
 	);
 	ReactDOM.render(template, appRoot);
